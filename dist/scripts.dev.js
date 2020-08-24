@@ -1,7 +1,5 @@
 "use strict";
 
-var barba = require("./barba");
-
 var runScripts = function runScripts() {
   var headers = document.querySelectorAll("h2, h3");
   var imageHolders = document.querySelectorAll("div.image");
@@ -35,11 +33,16 @@ barba.init({
       return new Promise(function (resolve) {
         var timeline = gsap.timeline({
           onComplete: function onComplete() {
+            current.container.remove();
             resolve();
           }
         });
         timeline.to("header", {
           y: "-100%"
+        }, 0).to("footer", {
+          y: "100%"
+        }, 0).to(current.container, {
+          opacity: 0
         });
       });
     },
@@ -48,14 +51,24 @@ barba.init({
           next = _ref2.next,
           trigger = _ref2.trigger;
       return new Promise(function (resolve) {
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth"
+        });
         var timeline = gsap.timeline({
           onComplete: function onComplete() {
             runScripts();
             resolve();
           }
         });
-        timeline.to("header", {
+        timeline.set(next.container, {
+          opacity: 0
+        }).to("header", {
           y: "0%"
+        }, 0).to("footer", {
+          y: "0%"
+        }, 0).to(next.container, {
+          opacity: 1
         });
       });
     }
