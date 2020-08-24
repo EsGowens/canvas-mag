@@ -39,7 +39,7 @@ barba.init({
           }
         });
         timeline.to("header", {
-          y: "-100"
+          y: "-100%"
         });
       });
     },

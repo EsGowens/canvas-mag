@@ -41,7 +41,7 @@ barba.init({
                         }
                     })
 
-                    timeline.to("header", { y: "-100" })
+                    timeline.to("header", { y: "-100%" })
                 })
             },
             enter({ current, next, trigger }) {
