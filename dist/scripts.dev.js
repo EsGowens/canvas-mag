@@ -1,5 +1,7 @@
 "use strict";
 
+var bodyTag = document.querySelector("body");
+
 var runScripts = function runScripts() {
   var headers = document.querySelectorAll("h2, h3");
   var imageHolders = document.querySelectorAll("div.image");
@@ -26,10 +28,32 @@ runScripts();
 barba.init({
   transitions: [{
     name: "switch",
-    leave: function leave(_ref) {
+    once: function once(_ref) {
       var current = _ref.current,
           next = _ref.next,
           trigger = _ref.trigger;
+      return new Promise(function (resolve) {
+        var images = document.querySelectorAll("img");
+        gsap.set(next.container, {
+          opacity: 0
+        });
+        imagesLoaded(images, function () {
+          var timeline = gsap.timeline({
+            onComplete: function onComplete() {
+              resolve();
+            }
+          });
+          timeline.to(next.container, {
+            opacity: 1,
+            delay: 1
+          });
+        });
+      });
+    },
+    leave: function leave(_ref2) {
+      var current = _ref2.current,
+          next = _ref2.next,
+          trigger = _ref2.trigger;
       return new Promise(function (resolve) {
         var timeline = gsap.timeline({
           onComplete: function onComplete() {
@@ -46,10 +70,10 @@ barba.init({
         });
       });
     },
-    enter: function enter(_ref2) {
-      var current = _ref2.current,
-          next = _ref2.next,
-          trigger = _ref2.trigger;
+    enter: function enter(_ref3) {
+      var current = _ref3.current,
+          next = _ref3.next,
+          trigger = _ref3.trigger;
       return new Promise(function (resolve) {
         window.scrollTo({
           top: 0,
@@ -73,6 +97,14 @@ barba.init({
       });
     }
   }],
-  views: [],
+  views: [{
+    namespace: "product",
+    beforeEnter: function beforeEnter() {
+      bodyTag.classList.add("product");
+    },
+    afterLeave: function afterLeave() {
+      bodyTag.classList.remove("product");
+    }
+  }],
   debug: true
 });

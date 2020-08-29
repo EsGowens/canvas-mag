@@ -1,3 +1,4 @@
+const bodyTag = document.querySelector("body")
 const runScripts = () => {
     const headers = document.querySelectorAll("h2, h3")
     const imageHolders = document.querySelectorAll("div.image")
@@ -32,6 +33,27 @@ barba.init({
     transitions: [
         {
             name: "switch",
+            once({ current, next, trigger }) {
+                return new Promise(resolve => {
+
+                    const images = document.querySelectorAll("img")
+
+                    gsap.set(next.container, { opacity: 0 })
+
+                    imagesLoaded(images, () => {
+                        const timeline = gsap.timeline({
+                            onComplete() {
+                                resolve()
+                            }
+                        })
+    
+                        timeline
+                            .to(next.container, { opacity: 1, delay: 1 })
+                    })
+
+                    
+                })
+            },
             leave({ current, next, trigger }) {
                 return new Promise(resolve => {
                     const timeline = gsap.timeline({
@@ -71,6 +93,16 @@ barba.init({
             }
         }
     ],
-    views: [],
+    views: [
+        {
+            namespace: "product",
+            beforeEnter() {
+                bodyTag.classList.add("product")
+            },
+            afterLeave() {
+                bodyTag.classList.remove("product")
+            }
+        }
+    ],
     debug: true
 })
